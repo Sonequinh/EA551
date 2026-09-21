@@ -1,0 +1,7 @@
+disciplina: "EA551"
+ano: 2026
+nota: 10.0
+turma: "A"
+alunos: [10, 20, 30]
+medias: [8.5, 7.0, 9.25]
+nomes: ["A", "B", "C", "Abc"]
