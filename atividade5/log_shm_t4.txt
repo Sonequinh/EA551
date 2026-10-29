@@ -1,0 +1,7 @@
+Conectando à Memória Compartilhada e aguardando amostras do Produtor C...
+Inicialização do modelo de rede neural...
+
+Acurácia de classificação de dígitos: 0.9994
+O consumo de imagens via SHM gastou 10.3% do tempo total do loop.
+Pesos salvos em ./W.npy (shape (10, 784))
+Treinamento concluído.
