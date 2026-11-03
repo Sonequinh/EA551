@@ -1,0 +1,6 @@
+Indexando imagens de treino...
+Inicialização do modelo de rede neural...
+Acurácia de classificação de dígitos: 0.8467
+O consumo de imagens (read_mnist_txt_image) gastou (60.6% do tempo do loop)
+Pesos da rede neural salvos em ./W.npy (shape (10, 784))
+Treinamento concluído.

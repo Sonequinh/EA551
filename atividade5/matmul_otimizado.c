@@ -5,7 +5,7 @@
 #include <math.h>
 #include "matmul.h"
 
-// Aloca matriz utilizando o ponteiro de ponteiros (double **)
+// Aloca matriz
 double **alocar_matriz(uint32_t linhas, uint32_t colunas) {
     double **matriz = malloc(linhas * sizeof(double *));
     if (!matriz) {
@@ -31,7 +31,7 @@ void liberar_matriz(double **matriz, uint32_t linhas) {
     free(matriz);
 }
 
-// Lê o arquivo .emat usando estritamente a chamada de sistema read()
+// Lê o arquivo .emat
 double **ler_emat(const char *caminho, uint32_t *linhas, uint32_t *colunas) {
     int fd = open(caminho, O_RDONLY);
     if (fd < 0) {
@@ -152,10 +152,10 @@ double **ler_emat(const char *caminho, uint32_t *linhas, uint32_t *colunas) {
     return matriz;
 }
 
-// Multiplicação de matrizes C = A * B com loops explícitos de Álgebra Linear
+// Multiplicação de matrizes C = A * B
 double **multiplicar_matrizes(double **A, uint32_t rA, uint32_t cA, 
                               double **B, uint32_t rB, uint32_t cB) {
-    // Validação de compatibilidade de dimensões
+    
     if (cA != rB) {
         fprintf(stderr, "Erro de dimensões: Impossível multiplicar (%ux%u) por (%ux%u)\n", 
                 rA, cA, rB, cB);
@@ -178,7 +178,7 @@ double **multiplicar_matrizes(double **A, uint32_t rA, uint32_t cA,
     return C;
 }
 
-// Compara duas matrizes com tolerância para ponto flutuante
+// Compara duas matrizes
 int comparar_matrizes(double **C1, double **C2, uint32_t linhas, uint32_t colunas) {
     const double TOLERANCIA = 1e-4;
     for (uint32_t i = 0; i < linhas; i++) {
