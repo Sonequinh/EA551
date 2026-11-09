@@ -1,0 +1,8 @@
+# Perfil Monothread Sem Paralelismo
+modo: test
+caminho_pesos: ./W.emat
+caminho_entrada: ./mnist_emat/test
+matmul_threads: 1
+produtor_threads: 1
+produtor_buffer: 256
+visualizacao: false

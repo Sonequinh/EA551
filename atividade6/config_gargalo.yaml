@@ -1,0 +1,8 @@
+# Perfil com Gargalo de I/O por Buffer Reduzido
+modo: test
+caminho_pesos: ./W.emat
+caminho_entrada: ./mnist_emat/test
+matmul_threads: 4
+produtor_threads: 1
+produtor_buffer: 8
+visualizacao: false

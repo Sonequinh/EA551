@@ -1,27 +1,26 @@
 import ctypes
-import time
+import os
 
-# 1. Carrega a biblioteca compartilhada .so
+# Carrega a biblioteca C
 lib = ctypes.CDLL("./libmnist.so")
 
-# 2. Configura as assinaturas das funções (argtypes e restype)
-lib.iniciar_produtor.argtypes = [ctypes.c_char_p, ctypes.c_int]
-lib.iniciar_produtor.restype = ctypes.c_int
+# Protótipo da função em ctypes
+lib.executar_modo_teste_c.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p]
+lib.executar_modo_teste_c.restype = ctypes.c_int
 
-lib.finalizar_produtor.argtypes = []
-lib.finalizar_produtor.restype = None
+# Caminhos do dataset de teste e dos pesos
+dir_teste = b"./mnist_emat/test"  # Ajuste para a pasta 'test'
+arquivo_pesos = b"./W.emat"
+num_threads_produtor = 4
 
-# 3. Chama a função em C
-caminho_treino = b"./mnist_emat/train"
-num_threads = 4
+# Validação defensiva
+if not os.path.exists(arquivo_pesos.decode()):
+    print(f"❌ Erro: Arquivo de pesos '{arquivo_pesos.decode()}' não encontrado!")
+    exit(1)
 
-print("Iniciando produtor em C via .so...")
-total = lib.iniciar_produtor(caminho_treino, num_threads)
-print(f"Produtor iniciado com sucesso! Total de amostras: {total}")
+if not os.path.exists(dir_teste.decode()):
+    print(f"❌ Erro: Diretório de teste '{dir_teste.decode()}' não encontrado!")
+    exit(1)
 
-# Simula 2 segundos de trabalho
-time.sleep(2)
-
-print("Finalizando produtor...")
-lib.finalizar_produtor()
-print("Teste concluído com sucesso!")
+print("Iniciando Modo Teste (Batch Inference)...")
+lib.executar_modo_teste_c(dir_teste, num_threads_produtor, arquivo_pesos)
