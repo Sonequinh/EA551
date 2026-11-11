@@ -11,9 +11,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-# ==============================================================================
-# 1. Carregamento da Biblioteca Compartilhada C (.so)
-# ==============================================================================
+# Carregamento da Biblioteca Compartilhada C (.so)
 LIB_PATH = os.path.abspath("./libmnist.so")
 if not os.path.exists(LIB_PATH):
     raise FileNotFoundError(f"Biblioteca '{LIB_PATH}' não encontrada. Compile primeiro com o gcc!")
@@ -31,9 +29,7 @@ lib.executar_modo_teste_c.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_ch
 lib.executar_modo_teste_c.restype = ctypes.c_int
 
 
-# ==============================================================================
 # 2. Utilitário para Exportar Pesos no Formato .emat (C-Compatible)
-# ==============================================================================
 def salvar_pesos_emat(caminho_out: str, weights_tensor: torch.Tensor):
     """
     Salva a matriz de pesos W (10x784) no formato binário .emat (dtype=1 -> float32).
@@ -51,9 +47,7 @@ def salvar_pesos_emat(caminho_out: str, weights_tensor: torch.Tensor):
     print(f"\n[Python] Pesos W salvos com sucesso em '{caminho_out}' (Shape: {linhas}x{colunas})")
 
 
-# ==============================================================================
-# 3. Modelo Linear PyTorch
-# ==============================================================================
+# Modelo Linear PyTorch
 class LogisticRegressionMNIST(nn.Module):
     def __init__(self):
         super(LogisticRegressionMNIST, self).__init__()
@@ -64,9 +58,7 @@ class LogisticRegressionMNIST(nn.Module):
         return self.linear(x)
 
 
-# ==============================================================================
-# 4. Loop de Treino (C-DataLoader) e Avaliação (C-Modo Teste)
-# ==============================================================================
+# Loop de Treino (C-DataLoader) e Avaliação (C-Modo Teste)
 def train_and_evaluate(args: dict):
     dir_treino = os.path.join(args["mnist_path"], "train")
     dir_teste = os.path.join(args["mnist_path"], "test")
@@ -175,9 +167,7 @@ def train_and_evaluate(args: dict):
 
     salvar_pesos_emat(w_emat_path, model.linear.weight)
 
-    # ==============================================================================
     # 5. FASE 2: MODO TESTE EM C (Item 4 dos Requisitos)
-    # ==============================================================================
     print("\n==================== FASE 2: AVALIAÇÃO GLOBAL (C-Modo Teste) ====================")
     ret = lib.executar_modo_teste_c(
         dir_teste.encode("utf-8"),
@@ -187,6 +177,8 @@ def train_and_evaluate(args: dict):
 
     if ret == 0:
         print("[Python] Pipeline completo de treino e teste executado com sucesso!")
+
+
 
 
 if __name__ == "__main__":

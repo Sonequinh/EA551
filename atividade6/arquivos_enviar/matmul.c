@@ -222,20 +222,20 @@ int executar_inferencia_c(const char *caminho_imagem, const char *caminho_pesos)
 
 
 int executar_modo_teste_c(const char *dir_teste, int num_threads, const char *caminho_pesos) {
-    // 1. Carrega a matriz de pesos W (10 x 784) se ainda não estiver carregada
+    // Carrega a matriz de pesos W (10 x 784) se ainda não estiver carregada
     if (carregar_pesos_c(caminho_pesos) != 0) {
         fprintf(stderr, "Erro ao carregar pesos W do arquivo %s\n", caminho_pesos);
         return -1;
     }
 
-    // 2. Inicia o Produtor (DataLoader) em C que popula a SHM
+    // Inicia o Produtor (DataLoader) em C que popula a SHM
     int total_amostras = iniciar_produtor(dir_teste, num_threads);
     if (total_amostras <= 0) {
         fprintf(stderr, "Erro ao iniciar o produtor para o diretório: %s\n", dir_teste);
         return -1;
     }
 
-    // 3. Conecta aos semáforos POSIX criados pelo Produtor
+    // Conecta aos semáforos POSIX criados pelo Produtor
     sem_t *sem_empty = sem_open(SEM_EMPTY_NAME, 0);
     sem_t *sem_full  = sem_open(SEM_FULL_NAME, 0);
     sem_t *sem_mutex = sem_open(SEM_MUTEX_NAME, 0);
@@ -246,7 +246,7 @@ int executar_modo_teste_c(const char *dir_teste, int num_threads, const char *ca
         return -1;
     }
 
-    // 4. Conecta à Memória Compartilhada (SHM)
+    // Conecta à Memória Compartilhada (SHM)
     int shm_fd = shm_open(SHM_NAME, O_RDWR, 0666);
     if (shm_fd < 0) {
         perror("Erro ao abrir SHM no Consumidor");
@@ -271,7 +271,7 @@ int executar_modo_teste_c(const char *dir_teste, int num_threads, const char *ca
 
     int acertos = 0;
 
-    // 5. Laço Principal do Consumidor: consome todas as imagens da SHM
+    // Consome todas as imagens da SHM
     for (int i = 0; i < total_amostras; i++) {
         // Sincronização POSIX: aguarda slot cheio
         sem_wait(sem_full);
