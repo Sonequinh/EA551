@@ -1,9 +1,0 @@
-#  Perfil com consumidores reduzidos
-modo: test
-caminho_pesos: ./W.emat
-caminho_entrada: ./big_mnist_emat/test
-matmul_threads: 1
-produtor_threads: 4
-consumidores: 8
-produtor_buffer: 2048
-visualizacao: false

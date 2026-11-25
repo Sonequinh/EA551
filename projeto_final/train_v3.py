@@ -210,6 +210,7 @@ def train(args: Dict[str, Any]) -> None:
             test_dir,
             args["produtor_threads"],
             args["matmul_threads"],
+            args.get("consumidores", 4),
             args["buffer_size"],
             w_emat_path.encode("utf-8"),
         )

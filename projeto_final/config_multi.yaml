@@ -1,8 +1,0 @@
-# Perfil Paralelo (4 Threads de Matmul + 4 Threads de Carga)
-modo: test
-caminho_pesos: ./W.emat
-caminho_entrada: ./big_mnist_emat/test
-matmul_threads: 4
-produtor_threads: 4
-produtor_buffer: 2048
-visualizacao: false

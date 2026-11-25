@@ -23,8 +23,8 @@ struct fenster {
   const int width;
   const int height;
   uint32_t *buf;
-  int keys[256]; /* keys are mostly ASCII, but arrows are 17..20 */
-  int mod;       /* mod is 4 bits mask, ctrl=1, shift=2, alt=4, meta=8 */
+  int keys[256]; 
+  int mod;       
   int x;
   int y;
   int mouse;

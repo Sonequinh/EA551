@@ -1,0 +1,8 @@
+# Testando o modo inferencia
+modo: infer
+caminho_pesos: ./W.emat
+caminho_entrada: ./big_mnist_emat/test/0/60013.emat
+matmul_threads: 1
+produtor_threads: 1
+produtor_buffer: 64
+visualizacao: true
