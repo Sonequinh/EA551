@@ -59,6 +59,7 @@ def carregar_biblioteca(lib_path: str):
         ctypes.c_int,
         ctypes.c_int,
         ctypes.c_int,
+        ctypes.c_int,
         ctypes.c_char_p,
     ]
     lib.executar_modo_teste_ext.restype = ctypes.c_int
