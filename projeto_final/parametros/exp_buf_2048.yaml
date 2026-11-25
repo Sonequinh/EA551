@@ -1,0 +1,9 @@
+# Experimento: buf_2048 (produtor_buffer=2048)
+modo: test
+caminho_pesos: ./W.emat
+caminho_entrada: ./big_mnist_emat/test
+produtor_threads: 1
+produtor_buffer: 2048
+matmul_threads: 1
+consumidores: 1
+visualizacao: false

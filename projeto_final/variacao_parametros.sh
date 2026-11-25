@@ -1,0 +1,94 @@
+#!/bin/bash
+set -e
+
+mkdir -p ablacao
+CSV="ablacao/resultados.csv"
+echo "experimento,parametro,valor,tempo_s,vazao_img_s,acuracia_pct,arquivo_yaml" > "$CSV"
+
+# Configuração padrão (Baseline)
+BASE_PROD=1
+BASE_BUF=64
+BASE_MATMUL=1
+BASE_CONS=1
+
+rodar_experimento() {
+    local exp_nome="$1"
+    local param="$2"
+    local valor="$3"
+    local prod="$4"
+    local buf="$5"
+    local matmul="$6"
+    local cons="$7"
+
+    local yaml_file="ablacao/exp_${exp_nome}.yaml"
+
+    cat <<EOF > "$yaml_file"
+# Experimento: ${exp_nome} (${param}=${valor})
+modo: test
+caminho_pesos: ./W.emat
+caminho_entrada: ./big_mnist_emat/test
+produtor_threads: ${prod}
+produtor_buffer: ${buf}
+matmul_threads: ${matmul}
+consumidores: ${cons}
+visualizacao: false
+EOF
+
+    echo "============================================================"
+    echo ">>> RODANDO: ${exp_nome} | ${param}=${valor} (${yaml_file})"
+    echo "============================================================"
+
+    # Executa e captura a saída exibindo no terminal ao mesmo tempo
+    local saida
+    saida=$(LD_LIBRARY_PATH=./lib ./runner_yaml "$yaml_file" | tee /dev/tty)
+
+    # Extrai tempo, vazão e acurácia para o CSV
+    local tempo vazao acuracia
+    tempo=$(echo "$saida" | awk -F':' '/Tempo Total/{gsub(/[^0-9.]/,"",$2); print $2}')
+    vazao=$(echo "$saida" | awk -F':' '/Throughput/{gsub(/[^0-9.]/,"",$2); print $2}')
+    acuracia=$(echo "$saida" | awk -F':' '/Global/{gsub(/[^0-9.]/,"",$2); print $2}')
+
+    echo "${exp_nome},${param},${valor},${tempo},${vazao},${acuracia},${yaml_file}" >> "$CSV"
+}
+
+# Aquecimento do Page Cache do Linux (não entra no CSV)
+echo ">>> Executando warm-up do cache de disco..."
+cat <<EOF > ablacao/_warmup.yaml
+modo: test
+caminho_pesos: ./W.emat
+caminho_entrada: ./big_mnist_emat/test
+produtor_threads: 4
+produtor_buffer: 1024
+matmul_threads: 1
+consumidores: 4
+visualizacao: false
+EOF
+LD_LIBRARY_PATH=./lib ./runner_yaml ablacao/_warmup.yaml > /dev/null
+rm -f ablacao/_warmup.yaml
+
+# 0. Baseline (Configuração Padrão)
+rodar_experimento "00_base" "baseline" "base" "$BASE_PROD" "$BASE_BUF" "$BASE_MATMUL" "$BASE_CONS"
+
+# 1. Variação de produtor_threads (base = 1)
+for p in 2 4 8; do
+    rodar_experimento "prod_${p}" "produtor_threads" "$p" "$p" "$BASE_BUF" "$BASE_MATMUL" "$BASE_CONS"
+done
+
+# 2. Variação de produtor_buffer (base = 64)
+for b in 1 8 512 2048; do
+    rodar_experimento "buf_${b}" "produtor_buffer" "$b" "$BASE_PROD" "$b" "$BASE_MATMUL" "$BASE_CONS"
+done
+
+# 3. Variação de matmul_threads (base = 1)
+for m in 2 4 5 10; do
+    rodar_experimento "matmul_${m}" "matmul_threads" "$m" "$BASE_PROD" "$BASE_BUF" "$m" "$BASE_CONS"
+done
+
+# 4. Variação de consumidores (base = 1)
+for c in 2 4 8; do
+    rodar_experimento "cons_${c}" "consumidores" "$c" "$BASE_PROD" "$BASE_BUF" "$BASE_MATMUL" "$c"
+done
+
+echo ""
+echo "Concluído! Todos os YAMLs e resultados foram salvos em ./ablacao/"
+column -t -s',' "$CSV"

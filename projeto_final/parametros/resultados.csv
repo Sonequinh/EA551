@@ -1,0 +1,16 @@
+experimento,parametro,valor,tempo_s,vazao_img_s,acuracia_pct,arquivo_yaml
+00_base,baseline,base,3.9851,2509.32,86.64,ablacao/exp_00_base.yaml
+prod_2,produtor_threads,2,4.1261,2423.61,86.64,ablacao/exp_prod_2.yaml
+prod_4,produtor_threads,4,3.9024,2562.53,86.64,ablacao/exp_prod_4.yaml
+prod_8,produtor_threads,8,4.2193,2370.05,86.64,ablacao/exp_prod_8.yaml
+buf_1,produtor_buffer,1,4.1910,2386.08,86.64,ablacao/exp_buf_1.yaml
+buf_8,produtor_buffer,8,3.9135,2555.26,86.64,ablacao/exp_buf_8.yaml
+buf_512,produtor_buffer,512,3.9214,2550.12,86.64,ablacao/exp_buf_512.yaml
+buf_2048,produtor_buffer,2048,3.8008,2631.05,86.64,ablacao/exp_buf_2048.yaml
+matmul_2,matmul_threads,2,3.9622,2523.85,86.64,ablacao/exp_matmul_2.yaml
+matmul_4,matmul_threads,4,3.9601,2525.18,86.64,ablacao/exp_matmul_4.yaml
+matmul_5,matmul_threads,5,3.9346,2541.53,86.64,ablacao/exp_matmul_5.yaml
+matmul_10,matmul_threads,10,4.0005,2499.69,86.64,ablacao/exp_matmul_10.yaml
+cons_2,consumidores,2,1.9415,5150.65,86.64,ablacao/exp_cons_2.yaml
+cons_4,consumidores,4,1.1601,8619.62,86.64,ablacao/exp_cons_4.yaml
+cons_8,consumidores,8,0.7168,13950.50,86.64,ablacao/exp_cons_8.yaml

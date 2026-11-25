@@ -1,0 +1,9 @@
+# Experimento: 00_base (baseline=base)
+modo: test
+caminho_pesos: ./W.emat
+caminho_entrada: ./big_mnist_emat/test
+produtor_threads: 1
+produtor_buffer: 64
+matmul_threads: 1
+consumidores: 1
+visualizacao: false
